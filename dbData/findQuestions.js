@@ -14,4 +14,6 @@ async function getUserById(id) {
     return await User.findOne({ _id: id }).populate('games');
 }
 
-export { getUserByName, findGameById, getUserById };
+module.exports.getUserByName = getUserByName;
+module.exports.findGameById = findGameById;
+module.exports.getUserById = getUserById;

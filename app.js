@@ -12,6 +12,10 @@ mongoose.connect(db.url, { useNewUrlParser: true });
 let app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
+require('./routes/index')(app);
+require('./routes/game')(app);
+require('./routes/users')(app);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

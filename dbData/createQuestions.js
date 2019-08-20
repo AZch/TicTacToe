@@ -13,4 +13,5 @@ async function insertStepToGame(game, dataStep) {
     return step;
 }
 
-export { addNewGame, insertStepToGame }
+module.exports.addNewGame = addNewGame;
+module.exports.insertStepToGame = insertStepToGame;
