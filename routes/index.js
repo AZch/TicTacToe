@@ -19,7 +19,7 @@ router.post('/', function (req, res, next) {
   FindQuestion.getUserByName(username).then( (user) => {
     let dataGame = { size: req.body.sizeGame, sizeWin: req.body.countWin };
 
-    if (user === null && username !== "") {
+    if (user === null && username !== "" && username !== undefined) {
       res.send({'error': 'cant find user: ' + username});
     } else {
 

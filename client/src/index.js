@@ -8,17 +8,11 @@ const Route = require('react-router-dom').Route;
 const InputData = require('./pages/InitGame').default;
 const Game = require('./pages/game').default;
 
-function Index() {
-    return <h2>Home</h2>
-}
 
 function About() {
     return <h2>About</h2>
 }
 
-function Users() {
-    return <h2>Users</h2>
-}
 
 function AppRouter() {
     return (
@@ -31,9 +25,6 @@ function AppRouter() {
                         </li>
                         <li>
                             <Link to="/about/">About</Link>
-                        </li>
-                        <li>
-                            <Link to="{`/game/${game.id}`}">Users</Link>
                         </li>
                     </ul>
                 </nav>

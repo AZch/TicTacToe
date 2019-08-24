@@ -33,17 +33,24 @@ function getMostStep(mostComp, field, countWin, countComp = 0) {
  * @param mostUser данные анализа отсортированные по пользователю
  * @param field исходное поле
  * @param countWin количество очков необходимое для побежы
+ * @param neight
  * @param countUser необходимое количество очков для хода
  * @returns {*} найденный ход с координатами, либо undefind усли ход не найден
  */
-function getFirstFindStep(mostUser, field, countWin, countUser = 0) {
+function getFirstFindStep(mostUser, field, countWin, neight, countUser = 0) {
     let step;
     if (mostUser.length > 0) {
         for (let userData of mostUser) {
             if (userData.user < countUser) break;
-            for (let coord of userData.coord) {
-                if (field[coord.x][coord.y] === -1) {
-                    step = coord;
+            let preventCoord;
+            for (let i = 0; i < userData.coord.length; i++) {
+                const currentCoord = userData.coord[i];
+                const preventCoord = userData.coord[i - 1];
+                const nextCoord = userData.coord[i + 1];
+                if (field[currentCoord.x][currentCoord.y] === -1 &&
+                    ((preventCoord !== undefined && field[preventCoord.x][preventCoord.y] === neight) ||
+                     (nextCoord !== undefined && field[nextCoord.x][nextCoord.y] === neight))) {
+                    step = currentCoord;
                     break;
                 }
             }
@@ -66,23 +73,23 @@ function getFirstFindStep(mostUser, field, countWin, countUser = 0) {
  */
 function getCoordStep(analyseFieldData, field, countWin) {
     let mostComp = analyseFieldData.sort((first, second) => {
-        return second.comp - first.comp;
+        return ((second.user !== first.user) ? second.user - first.user : Math.random() >= 0.5);
     });
 
     let step = getMostStep(mostComp, field, countWin, countWin - 1);
     if (step !== undefined) return step;
 
     let mostUser = analyseFieldData.sort((first, second) => {
-        return second.user - first.user;
+        return ((second.user !== first.user) ? second.user - first.user : Math.random() >= 0.5);
     });
 
-    step = getFirstFindStep(mostUser, field, countWin, countWin - 1);
+    step = getFirstFindStep(mostUser, field, countWin, 1, countWin - 2);
     if (step !== undefined) return step;
 
-    step = getFirstFindStep(mostComp, field, countWin);
+    step = getFirstFindStep(mostComp, field, 0, 0);
     if (step !== undefined) return step;
 
-    step = getFirstFindStep(mostUser, field, countWin);
+    step = getFirstFindStep(mostUser, field, 1, 1);
     if (step !== undefined) return step;
 
     return {

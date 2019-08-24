@@ -1,13 +1,13 @@
-var User = require('../shemas/user');
+const User = require('../shemas/user');
+const Game = require('../shemas/game');
+const ObjectID = require('mongodb').ObjectID;
 
 async function getUserByName(name) {
     return await User.findOne({ name: name }).populate('games');
 }
 
 async function findGameById(id) {
-    return await Game.
-    findOne({ _id: new ObjectID(id) }).
-    populate('steps');
+    return Game.findOne({_id: new ObjectID(id)}).populate('steps');
 }
 
 async function getUserById(id) {

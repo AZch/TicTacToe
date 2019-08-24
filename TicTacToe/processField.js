@@ -77,13 +77,21 @@ function analyseField(field, countWin) {
                 counterSubDiag = processElemField(field, i + coord, j - coord, counterSubDiag);
             }
             // сохранение данных для дальнейшей проверки
-            if (counterRight.comp !== 0 || counterRight.user !== 0) allData.push(counterRight);
-            if (counterDown.comp !== 0 || counterDown.user !== 0) allData.push(counterDown);
-            if (counterMainDiag.comp !== 0 || counterMainDiag.user !== 0) allData.push(counterMainDiag);
-            if (counterSubDiag.comp !== 0 || counterSubDiag.user !== 0) allData.push(counterSubDiag);
+            if (isAddCounter(counterRight, countWin)) allData.push(counterRight);
+            if (isAddCounter(counterDown, countWin)) allData.push(counterDown);
+            if (isAddCounter(counterMainDiag, countWin)) allData.push(counterMainDiag);
+            if (isAddCounter(counterSubDiag, countWin)) allData.push(counterSubDiag);
         }
     }
     return allData;
+}
+
+function isAddCounter(counter, countWin) {
+    return (
+        (counter.comp !== 0 || counter.user !== 0) &&
+        (counter.user + counter.comp < counter.coord.length) &&
+        (counter.coord.length === countWin)
+    )
 }
 
 /**
@@ -98,7 +106,8 @@ function processElemField(field, x, y, counter) {
     if (field[x] !== undefined && field[x][y] !== undefined) {
         if (field[x][y] === 0) counter.comp++;
         else if (field[x][y] === 1) counter.user++;
-        counter.coord.push({x: x, y: y});
+        if (counter.comp === 0 || counter.user === 0)
+            counter.coord.push({x: x, y: y});
     }
     return counter;
 }

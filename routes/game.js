@@ -29,14 +29,14 @@ router.post('/:id', function (req, res, next) {
                     const dataStep = { coord_x: processStep.x, coord_y: processStep.y, isUser: false };
                     CreateQuestions.insertStepToGame(game, dataStep).then((step) => { // insert step computer to DB
                         if (isEnd !== undefined && isEnd) { // check if result (computer win)
-                            res.send({'data': 'end'});
+                            res.send({'data': 'end', step: step});
                         } else {
                             res.send(step);
                         }
                     });
 
                 } else {
-                    res.send(processStep); // user win
+                    res.send({'data': processStep}); // user win
                 }
             });
         } else {

@@ -1,6 +1,6 @@
 import React from 'react';
 import '../index.css';
-const StangartQuestions = require('../questions/standart');
+const StandartQuestions = require('../questions/standart');
 
 function generateField(size, val) {
     let field = new Array(size);
@@ -25,21 +25,48 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            squares: generateField(4),
+            squares: generateField(props.value),
             xIsNext: true,
+            gameURL: props.gameURL,
+            statusGame: 'game...',
+            isEnd: false
         };
     }
 
     handleClick(i, j) {
         const squares = this.state.squares.slice();
-        if (squares[i][j]) {
+        const gameURL = this.state.gameURL;
+        const isEnd = this.state.isEnd;
+        if (squares[i][j] || isEnd) {
             return;
         }
-        squares[i][j] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
-            squares: squares,
-            xIsNext: !this.state.xIsNext
+        squares[i][j] = 'X';
+        StandartQuestions.postData(gameURL, {coord_x: i, coord_y: j}).then((coord) => {
+            if (coord.data === undefined) {
+                squares[coord.coord_x][coord.coord_y] = 'O';
+                this.setState({
+                    squares: squares
+                });
+            } else {
+                if (coord.step !== undefined) {
+                    console.log('make step');
+                    squares[coord.step.coord_x][coord.step.coord_y] = 'O';
+                    this.setState({
+                        statusGame: coord.data,
+                        squares: squares,
+                        isEnd: true,
+                    });
+                } else {
+                    console.log('dont make step');
+                    this.setState({
+                        statusGame: coord.data,
+                        isEnd: true,
+                    });
+                }
+            }
         });
+
+
     }
 
     renderSquare(i, j) {
@@ -51,8 +78,7 @@ class Board extends React.Component {
     }
 
     render() {
-        const status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
-        console.log(this.props.params);
+        const status = this.state.statusGame;
         return (
             <div>
                 <div className="status">{status}</div>
@@ -79,57 +105,38 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props.match.params.id);
         this.state = {
-            idGame: props.match.params.id,
+            gameUrl: props.match.url,
             error: null,
             isLoaded: false,
             items: [],
             size: 1,
-            countWin: 1,
         };
 
 
     }
 
     componentDidMount() {
-
-
-        fetch("game/")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result.items
-                    });
-                },
-                // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-                // чтобы не перехватывать исключения из ошибок в самих компонентах.
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
+        StandartQuestions.getData(this.state.gameUrl).then((game) => {
+            this.setState({
+                isLoaded: true,
+                size: game.size
+            })
+        });
     }
 
     render() {
-        const { error, isLoaded, items } = this.state;
-        if (error) {
+        const isLoaded = this.state.isLoaded;
+        const size = this.state.size;
+        const gameURL = this.state.gameUrl;
+        /*if (error) {
             return <div>Ошибка: {error.message}</div>;
-        } else if (!isLoaded) {
-            return <div><Board/></div>;
+        } else */
+        if (!isLoaded) {
+            return <div>Загрузка...</div>;
         } else {
             return (
-                <ul>
-                    {items.map(item => (
-                        <li key={item.name}>
-                            {item.name} {item._id}
-                        </li>
-                    ))}
-                </ul>
+                <Board value={size} gmaeURL={gameURL}/>
             );
         }
     }

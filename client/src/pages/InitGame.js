@@ -28,13 +28,13 @@ class TextForm extends React.Component {
 class PositiveNumForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { value: 1 };
+        this.state = { value: 3 };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
-        if (event.target.value > 0) {
+        if (event.target.value > 0 || event.target.value === "") {
             this.setState({
                 value: event.target.value,
             });
@@ -55,10 +55,13 @@ class PositiveNumForm extends React.Component {
 export default class InputData extends React.Component {
     constructor(props) {
         super(props);
+        console.log('INIT');
+        console.log(props);
         this.state = {
             username: '',
-            sizeGame: 1,
-            countWin: 1,
+            sizeGame: 3,
+            countWin: 3,
+            history: props.history
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -82,10 +85,9 @@ export default class InputData extends React.Component {
     }
 
     handleSubmit(event) {
+        console.log(this.state);
         StandartQuestions.postData("/", this.state).then((result) => {
-            console.log('NEW');
-            console.log(result);
-            this.props.history.push('/game/' + result._id);
+            this.state.history.push('/game/' + result._id);
         });
         console.log();
 
