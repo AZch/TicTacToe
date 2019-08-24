@@ -1,91 +1,57 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+const Router = require('react-router-dom').BrowserRouter;
+const Link = require('react-router-dom').Link;
+const Route = require('react-router-dom').Route;
+const InputData = require('./pages/InitGame').default;
+const Game = require('./pages/game').default;
 
+function Index() {
+    return <h2>Home</h2>
+}
 
-function Square(props) {
+function About() {
+    return <h2>About</h2>
+}
+
+function Users() {
+    return <h2>Users</h2>
+}
+
+function AppRouter() {
     return (
-        <button
-            className="square"
-            onClick={props.onClick}
-        >
-            {props.value}
-        </button>
+        <Router>
+            <div>
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/">InitGame</Link>
+                        </li>
+                        <li>
+                            <Link to="/about/">About</Link>
+                        </li>
+                        <li>
+                            <Link to="{`/game/${game.id}`}">Users</Link>
+                        </li>
+                    </ul>
+                </nav>
+
+                <Route path="/" exact component={InputData} />
+                <Route path="/about/" component={About} />
+                <Route path="/game/:id" component={Game} />
+            </div>
+        </Router>
     );
 }
 
-class Board extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            squares: Array(9).fill(null),
-            xIsNext: true,
-        };
-    }
 
-    handleClick(i) {
-        const squares = this.state.squares.slice();
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
-            squares: squares,
-            xIsNext: !this.state.xIsNext
-        });
-    }
 
-    renderSquare(i) {
-        return ( <Square
-                    value={this.state.squares[i]}
-                    onClick={() => this.handleClick(i)}
-                 />
-        );
-    }
-
-    render() {
-        const status = 'Следующий ход: ' + (this.state.xIsNext ? 'X' : 'O');
-
-        return (
-            <div>
-                <div className="status">{status}</div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
-    }
-}
-
-class Game extends React.Component {
-    render() {
-        return (
-            <div className="game">
-                <div className="game-board">
-                    <Board />
-                </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
-                </div>
-            </div>
-        );
-    }
-}
 
 ReactDOM.render(
-    <Game />,
+        <AppRouter/>
+    ,
     document.getElementById('root')
 );
 

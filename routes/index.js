@@ -10,18 +10,24 @@ router.get('/', function(req, res, next) {
     { $match: {} }
   ], function (err, users) {
     if(err) return console.log(err);
-    res.send(users);
+    res.send(200, users);
   });
 });
 
 router.post('/', function (req, res, next) {
-  FindQuestion.getUserByName(req.body.name).then( (user) => {
-    let dataGame = { user_side: req.body.user_side, size: req.body.size, sizeWin: req.body.sizeWin };
+  const username = req.body.username;
+  FindQuestion.getUserByName(username).then( (user) => {
+    let dataGame = { size: req.body.sizeGame, sizeWin: req.body.countWin };
 
-    CreateQuestions.addNewGame(user, dataGame).then((user) => {
-      if (err) return res.send(500, { error: err });
-      res.send(user);
-    });
+    if (user === null && username !== "") {
+      res.send({'error': 'cant find user: ' + username});
+    } else {
+
+      CreateQuestions.addNewGame(user, dataGame).then((game) => {
+        //if (err) return res.send(500, { error: err });
+        res.send(game);
+      });
+    }
   });
 });
 

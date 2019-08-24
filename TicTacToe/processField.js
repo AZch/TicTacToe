@@ -117,18 +117,19 @@ function counterTemplate() {
 /**
  * Генерация пустого поля (из едениц)
  * @param size размер поля
+ * @param val
  * @returns {[]} полученный результат, двумерный массив размера size на size
  */
-function generateField(size) {
+function generateField(size, val) {
     let field = new Array(size);
     for (let i = 0; i < field.length; i++) {
-        field[i] = new Array(size).fill(-1);
+        field[i] = new Array(size).fill(val);
     }
     return field;
 }
 
 function makeField(steps, step, size) {
-    let field = generateField(size);
+    let field = generateField(size, -1);
     field[step.coord_x][step.coord_y] = 1;
     steps.forEach((step) => {
         field[step.coord_x][step.coord_y] = (step.isUser ? 1 : 0);
@@ -139,3 +140,4 @@ function makeField(steps, step, size) {
 module.exports.analyseField = analyseField;
 module.exports.makeField = makeField;
 module.exports.checkEnd = checkEnd;
+module.exports.generateField = generateField;

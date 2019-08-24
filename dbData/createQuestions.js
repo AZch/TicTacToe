@@ -2,8 +2,12 @@ var Game = require('../shemas/game');
 var Step = require('../shemas/step');
 
 async function addNewGame(user, dataGame) {
-    user.games.push(await Game.create(dataGame));
-    return await user.save();
+    const game = await Game.create(dataGame);
+    if (user !== null) {
+        user.games.push(game);
+        await user.save();
+    }
+    return game;
 }
 
 async function insertStepToGame(game, dataStep) {
