@@ -2,10 +2,17 @@ import React from 'react';
 import '../index.css';
 const StandartQuestions = require('../questions/standart');
 
-function generateField(size, val) {
+function generateField(size, steps, val = null) {
     let field = new Array(size);
     for (let i = 0; i < field.length; i++) {
         field[i] = new Array(size).fill(val);
+    }
+    let isX = true;
+    console.log('steps:');
+    console.log(steps);
+    for (let step of steps) {
+        field[step.coord_x][step.coord_y] = isX ? 'X' : 'O';
+        isX = !isX;
     }
     return field;
 }
@@ -24,8 +31,10 @@ function Square(props) {
 class Board extends React.Component {
     constructor(props) {
         super(props);
+        console.log('steps2:');
+        console.log(props.steps);
         this.state = {
-            squares: generateField(props.value),
+            squares: generateField(props.value, props.steps),
             xIsNext: true,
             gameURL: props.gameURL,
             statusGame: 'game...',
@@ -106,10 +115,11 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameUrl: props.match.url,
+            gameURL: props.match.url,
             error: null,
             isLoaded: false,
             items: [],
+            steps: [],
             size: 1,
         };
 
@@ -117,10 +127,12 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-        StandartQuestions.getData(this.state.gameUrl).then((game) => {
+        StandartQuestions.getData(this.state.gameURL).then((game) => {
+            console.log(game.steps);
             this.setState({
                 isLoaded: true,
-                size: game.size
+                size: game.size,
+                steps: game.steps
             })
         });
     }
@@ -128,7 +140,8 @@ class Game extends React.Component {
     render() {
         const isLoaded = this.state.isLoaded;
         const size = this.state.size;
-        const gameURL = this.state.gameUrl;
+        const gameURL = this.state.gameURL;
+        const steps = this.state.steps;
         /*if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else */
@@ -136,7 +149,7 @@ class Game extends React.Component {
             return <div>Загрузка...</div>;
         } else {
             return (
-                <Board value={size} gmaeURL={gameURL}/>
+                <Board value={size} steps={steps} gmaeURL={gameURL}/>
             );
         }
     }
