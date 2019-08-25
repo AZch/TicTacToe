@@ -1,16 +1,15 @@
-var User = require('../shemas/user');
-var FindQuestion = require('../dbData/findQuestions');
-var CreateQuestions = require('../dbData/createQuestions');
-var express = require('express');
-var router = express.Router();
+const User = require('../shemas/user');
+const FindQuestion = require('../dbData/findQuestions');
+const CreateQuestions = require('../dbData/createQuestions');
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   User.aggregate([
     { $match: {} }
   ], function (err, users) {
-    if(err) return console.log(err);
-    res.send(200, users);
+    if(err) res.send({error: 'cant find users'});
+    res.send(users);
   });
 });
 
@@ -24,8 +23,9 @@ router.post('/', function (req, res, next) {
     } else {
 
       CreateQuestions.addNewGame(user, dataGame).then((game) => {
-        //if (err) return res.send(500, { error: err });
         res.send(game);
+      }).catch((error) => {
+        res.send({error: 'Cant create game'})
       });
     }
   });

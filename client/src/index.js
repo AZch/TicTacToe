@@ -9,11 +9,6 @@ const InputData = require('./pages/InitGame').default;
 const Game = require('./pages/game').default;
 
 
-function About() {
-    return <h2>About</h2>
-}
-
-
 function AppRouter() {
     return (
         <Router>
@@ -30,7 +25,6 @@ function AppRouter() {
                 </nav>
 
                 <Route path="/" exact component={InputData} />
-                <Route path="/about/" component={About} />
                 <Route path="/game/:id" component={Game} />
             </div>
         </Router>

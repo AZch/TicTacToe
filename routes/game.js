@@ -1,15 +1,21 @@
-var CreateQuestions = require('../dbData/createQuestions');
-var FindQuestions = require('../dbData/findQuestions');
+const CreateQuestions = require('../dbData/createQuestions');
+const FindQuestions = require('../dbData/findQuestions');
 const UpdateQuestion = require('../dbData/updateQuestions');
-var ProcessGame = require('../TicTacToe/processGame');
-var express = require('express');
-var router = express.Router();
+const ProcessGame = require('../TicTacToe/processGame');
+const io = require('socket.io');
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
+
 router.get('/:id', function(req, res, next) {
     FindQuestions.findGameById(req.params.id).then((item) => {
-        res.send(item);
-        //res.send(item);
+        if (item !== null) {
+            res.send(item);
+        } else {
+            res.send({error: 'cant find game'});
+        }
+    }).catch((error) => {
+        res.send({error: 'cant find game'});
     });
 });
 
@@ -32,21 +38,27 @@ router.post('/:id', function (req, res, next) {
                         if (isEnd !== undefined && isEnd) { // check if result (computer win)
                             game.isUserWin = false;
                             UpdateQuestion.updateGame(game);
-                            res.send({'data': false, step: step});
+                            res.send({'isUserWin': false, step: step});
                         } else {
                             res.send(step);
                         }
+                    }).catch((error) => {
+                        res.send({error: 'cant make computer step'});
                     });
 
                 } else {
                     game.isUserWin = true;
                     UpdateQuestion.updateGame(game);
-                    res.send({'data': true}); // user win
+                    res.send({'isUserWin': true});
                 }
+            }).catch((error) => {
+                res.send({error: 'cant make user step'});
             });
         } else {
-            res.send({'data': 'trable'}) // bad data
+            res.send({error: 'bad game id or coordination step'});
         }
+    }).catch((error) => {
+        res.send({error: 'cant find game'});
     });
 });
 

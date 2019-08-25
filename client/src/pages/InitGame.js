@@ -65,7 +65,8 @@ class InputData extends React.Component {
             username: '',
             sizeGame: 3,
             countWin: 3,
-            history: props.history
+            history: props.history,
+            status: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -93,7 +94,16 @@ class InputData extends React.Component {
         event.preventDefault();
         console.log(this.state);
         StandartQuestions.postData("/", this.state).then((result) => {
-            this.state.history.push('/game/' + result._id);
+            if (result.error === undefined) {
+                this.setState({
+                    status: 'success create game'
+                });
+                this.state.history.push('/game/' + result._id);
+            } else {
+                this.setState({
+                    status: result.error
+                });
+            }
         });
     }
 
@@ -101,7 +111,15 @@ class InputData extends React.Component {
         event.preventDefault();
         console.log(this.state);
         StandartQuestions.postData('/user', this.state).then((result) => {
-            console.log(result);
+            if (result.error === undefined) {
+                this.setState({
+                    status: 'success create user: ' + result.name,
+                });
+            } else {
+                this.setState({
+                    status: result.error,
+                });
+            }
         });
     }
 
@@ -110,6 +128,8 @@ class InputData extends React.Component {
     }
 
     render() {
+        const status = this.state.status;
+
         return (
             <form onSubmit={this.handleSubmit}>
                 <div className="board-row">
@@ -131,6 +151,9 @@ class InputData extends React.Component {
                     <PositiveNumForm updateData={this.updateCountWin}/>
                 </div>
                 <input type="submit" value="Начать игру" />
+                <div className="board-row">
+                    {status}
+                </div>
             </form>
         );
     }

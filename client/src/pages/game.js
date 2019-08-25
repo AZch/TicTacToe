@@ -35,8 +35,9 @@ class Board extends React.Component {
             squares: generateField(props.value, props.steps),
             xIsNext: true,
             gameURL: props.gameURL,
-            statusGame: 'game...',
-            isUserWin: props.isUserWin
+            statusGame: '',
+            isUserWin: props.isUserWin,
+            isError: false
         };
     }
 
@@ -44,32 +45,37 @@ class Board extends React.Component {
         const squares = this.state.squares.slice();
         const gameURL = this.state.gameURL;
         const isUserWin = this.state.isUserWin;
+        const isError = this.state.isError;
         if (squares[i][j] || isUserWin !== undefined) {
             return;
         }
         squares[i][j] = 'X';
-        StandartQuestions.postData(gameURL, {coord_x: i, coord_y: j}).then((coord) => {
-            if (coord.data === undefined) {
-                squares[coord.coord_x][coord.coord_y] = 'O';
+        StandartQuestions.postData(gameURL, {coord_x: i, coord_y: j}).then((item) => {
+            if (item.isUserWin === undefined && item.error === undefined) {
+                squares[item.coord_x][item.coord_y] = 'O';
                 this.setState({
-                    squares: squares
+                    squares: squares,
+                    isError: false
                 });
-            } else {
-                if (coord.step !== undefined) {
-                    console.log('make step');
-                    squares[coord.step.coord_x][coord.step.coord_y] = 'O';
+            } else if (item.error === undefined) {
+                if (item.step !== undefined) {
+                    squares[item.step.coord_x][item.step.coord_y] = 'O';
                     this.setState({
-                        statusGame: coord.data,
                         squares: squares,
-                        isUserWin: false,
+                        isUserWin: item.isUserWin,
+                        isError: false
                     });
                 } else {
-                    console.log('dont make step');
                     this.setState({
-                        statusGame: coord.data,
-                        isUserWin: true,
+                        isUserWin: item.isUserWin,
+                        isError: false
                     });
                 }
+            } else {
+                this.setState({
+                    statusGame: item.error,
+                    isError: true
+                })
             }
         });
 
@@ -85,10 +91,13 @@ class Board extends React.Component {
     }
 
     render() {
-        let status = this.state.statusGame;
+        let status = "";
         const isUserWin = this.state.isUserWin;
+        const isError = this.state.isError;
         if (isUserWin !== undefined) {
             status = isUserWin ? 'Пользователь выиграл' : 'Компьютер выиграл';
+        } else if (isError) {
+            status = this.state.statusGame;
         }
         return (
             <div>
@@ -123,7 +132,7 @@ class Game extends React.Component {
             items: [],
             steps: [],
             size: 1,
-            isUserWin: undefined
+            isUserWin: undefined,
         };
 
 
@@ -131,13 +140,20 @@ class Game extends React.Component {
 
     componentDidMount() {
         StandartQuestions.getData(this.state.gameURL).then((game) => {
-            console.log(game.steps);
-            this.setState({
-                isLoaded: true,
-                size: game.size,
-                steps: game.steps,
-                isUserWin: game.isUserWin
-            })
+            console.log(game);
+            if (game.error === undefined) {
+                this.setState({
+                    isLoaded: true,
+                    size: game.size,
+                    steps: game.steps,
+                    isUserWin: game.isUserWin,
+                    error: ''
+                })
+            } else {
+                this.setState({
+                    error: game.error
+                })
+            }
         });
     }
 
@@ -147,9 +163,10 @@ class Game extends React.Component {
         const gameURL = this.state.gameURL;
         const steps = this.state.steps;
         const isUserWin = this.state.isUserWin;
-        /*if (error) {
-            return <div>Ошибка: {error.message}</div>;
-        } else */
+        const error = this.state.error;
+        if (error) {
+            return <div>Ошибка: {error}</div>;
+        } else
         if (!isLoaded) {
             return <div>Загрузка...</div>;
         } else {

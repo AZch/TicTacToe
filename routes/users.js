@@ -14,7 +14,8 @@ router.get('/:id', function(req, res, next) {
       }
     },
   ], function (err, data) {
-    res.send(data);
+      if (err) res.send({error: 'Bad user id'});
+      res.send(data);
   });
 });
 
@@ -25,9 +26,11 @@ router.post('/', function (req, res, next) {
         data.name !== "") {
         CreateQuestions.addNewUser(data).then((user) => {
             res.send(user);
+        }).catch((error) => {
+            res.send({error: 'Bad user data'});
         });
     } else {
-        res.send({error: 'Bad user name'});
+        res.send({error: 'Bad user data'});
     }
 });
 
