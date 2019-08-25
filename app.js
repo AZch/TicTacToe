@@ -16,6 +16,7 @@ app.use(require("body-parser").json());
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var gamesRouter = require('./routes/game');
+var statRouter = require('./routes/stat');
 
 const io = require('socket.io')();
 const sendAll = require('./sockets/sendAll')(io);
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/game', gamesRouter);
+app.use('/stat', statRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
