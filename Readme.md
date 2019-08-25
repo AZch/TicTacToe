@@ -12,3 +12,7 @@
 4. /user/:id : post - зарегистрировать игрока
 
 TODO: добавить socket.io 
+
+Start:
+server: из родительской директории
+client: из директории /client/

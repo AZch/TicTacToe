@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
 module.exports = {
-    url : "",
+    url : "mongodb://localhost/tictactoedb",
 };
