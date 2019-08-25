@@ -15,20 +15,27 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function (req, res, next) {
   const username = req.body.username;
-  FindQuestion.getUserByName(username).then( (user) => {
-    let dataGame = { size: req.body.sizeGame, sizeWin: req.body.countWin };
+  const sizeGame = req.body.sizeGame;
+  const countWin = req.body.countWin;
+  if (sizeGame < countWin || sizeGame === '' || countWin === '' ||
+      sizeGame === undefined || countWin === undefined) {
+    res.send({error: 'Bad game parametrs'});
+  } else {
+    FindQuestion.getUserByName(username).then((user) => {
+      let dataGame = {size: sizeGame, sizeWin: countWin};
 
-    if (user === null && username !== "" && username !== undefined) {
-      res.send({'error': 'cant find user: ' + username});
-    } else {
+      if (user === null && username !== "" && username !== undefined) {
+        res.send({'error': 'cant find user: ' + username});
+      } else {
 
-      CreateQuestions.addNewGame(user, dataGame).then((game) => {
-        res.send(game);
-      }).catch((error) => {
-        res.send({error: 'Cant create game'})
-      });
-    }
-  });
+        CreateQuestions.addNewGame(user, dataGame).then((game) => {
+          res.send(game);
+        }).catch((error) => {
+          res.send({error: 'Cant create game'})
+        });
+      }
+    });
+  }
 });
 
 module.exports = router;
