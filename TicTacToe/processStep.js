@@ -30,22 +30,22 @@ function getMostStep(mostComp, field, countWin, countComp = 0) {
 
 /**
  * Получить лучший ход для компьютера
- * @param mostUser данные анализа отсортированные по пользователю
+ * @param most данные анализа отсортированные по пользователю
  * @param field исходное поле
  * @param countWin количество очков необходимое для побежы
  * @param neight
- * @param countUser необходимое количество очков для хода
+ * @param countData необходимое количество очков для хода
  * @returns {*} найденный ход с координатами, либо undefind усли ход не найден
  */
-function getFirstFindStep(mostUser, field, countWin, neight, countUser = 0) {
+function getFirstFindStep(most, field, countWin, neight, countData = 0) {
     let step;
-    if (mostUser.length > 0) {
-        for (let userData of mostUser) {
-            if (userData.user < countUser) break;
-            for (let i = 0; i < userData.coord.length; i++) {
-                const currentCoord = userData.coord[i];
-                const preventCoord = userData.coord[i - 1];
-                const nextCoord = userData.coord[i + 1];
+    if (most.length > 0) {
+        for (let data of most) {
+            if (data.user < countData) break;
+            for (let i = 0; i < data.coord.length; i++) {
+                const currentCoord = data.coord[i];
+                const preventCoord = data.coord[i - 1];
+                const nextCoord = data.coord[i + 1];
                 if (field[currentCoord.x][currentCoord.y] === -1 &&
                     ((preventCoord !== undefined && field[preventCoord.x][preventCoord.y] === neight) ||
                      (nextCoord !== undefined && field[nextCoord.x][nextCoord.y] === neight))) {
@@ -88,11 +88,14 @@ function getCoordStep(analyseFieldData, field, countWin) {
     step = getFirstFindStep(mostUser, field, countWin, 1, countWin - 2);
     if (step !== undefined) return step;
 
+    if (Math.random() >= 0.5) { // добавил немного рандома в оборону (либо только ограничивать пользователя или пытаться победить)
+        step = getFirstFindStep(mostUser, field, 1, 1);
+        if (step !== undefined) return step;
+    }
+
     step = getFirstFindStep(mostComp, field, 0, 0);
     if (step !== undefined) return step;
 
-    step = getFirstFindStep(mostUser, field, 1, 1);
-    if (step !== undefined) return step;
 
     return {
         x: Math.floor(Math.random() * field.length),
