@@ -2,6 +2,7 @@ const FindQuestions = require('../dbData/findQuestions');
 const express = require('express');
 const router = express.Router();
 
+// знаю что нужно передавать id, но соберался вообще в дальнейшем это исключить и показывать пользователей по JWT аутентификации
 router.get('/:name', function(req, res, next) {
     const name = req.params.name;
     FindQuestions.getUserByName(name).then((user) => {
