@@ -1,5 +1,5 @@
-var ProcessStep = require('./processStep');
-var ProcessField = require('./processField');
+const ProcessStep = require('./processStep');
+const ProcessField = require('./processField');
 
 function isValidStep(game, dataStep) {
     for (let step of game.steps) {

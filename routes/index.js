@@ -1,4 +1,3 @@
-const User = require('../shemas/user');
 const FindQuestion = require('../dbData/findQuestions');
 const CreateQuestions = require('../dbData/createQuestions');
 const ProcessGame = require('../TicTacToe/processGame');

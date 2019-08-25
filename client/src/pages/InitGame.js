@@ -1,5 +1,5 @@
-import React from 'react';
 import '../index.css';
+const React = require('react');
 const StandartQuestions = require('../questions/standart');
 
 class TextForm extends React.Component {

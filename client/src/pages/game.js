@@ -1,5 +1,5 @@
-import React from 'react';
 import '../index.css';
+const React = require('react');
 const StandartQuestions = require('../questions/standart');
 const openSocket = require('socket.io-client');
 const socket = openSocket('http://localhost:8000');

@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var gameSchema = new Schema({
+const gameSchema = new Schema({
     //user_side: Number, // 0 - нолики, 1 - крестики,
     sizeWin: {
         type: Number,

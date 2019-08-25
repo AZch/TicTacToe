@@ -8,7 +8,7 @@ exports = module.exports = function (io) {
               const dataSend = {
                   msg: 'The game is over' +
                       (user === null ? '' : ', user: ' + user.name) + ', winner: ' +
-                      (data.isUserWin ? 'computer' : 'user'),
+                      (data.isUserWin ? 'user' : 'computer'),
               };
               io.emit('resultGameMsg', JSON.stringify(dataSend));
           });

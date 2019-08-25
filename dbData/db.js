@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 module.exports = {
-    url : "",
+    url : "mongodb://localhost/tictactoedb",
 };

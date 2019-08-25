@@ -1,6 +1,6 @@
-var FindQuestions = require('../dbData/findQuestions');
-var express = require('express');
-var router = express.Router();
+const FindQuestions = require('../dbData/findQuestions');
+const express = require('express');
+const router = express.Router();
 const CreateQuestions = require('../dbData/createQuestions');
 
 router.post('/', function (req, res, next) {

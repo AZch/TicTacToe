@@ -13,10 +13,10 @@ let app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require("body-parser").json());
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var gamesRouter = require('./routes/game');
-var statRouter = require('./routes/stat');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const gamesRouter = require('./routes/game');
+const statRouter = require('./routes/stat');
 
 const io = require('socket.io')();
 const sendAll = require('./sockets/sendAll')(io);

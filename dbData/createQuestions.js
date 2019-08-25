@@ -1,5 +1,5 @@
-var Game = require('../shemas/game');
-var Step = require('../shemas/step');
+const Game = require('../shemas/game');
+const Step = require('../shemas/step');
 const User = require('../shemas/user');
 
 async function addNewGame(user, dataGame) {
