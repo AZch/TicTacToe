@@ -168,7 +168,6 @@ class InputData extends React.Component {
 
     componentDidMount() {
         StandartQuestions.getData("/stat/").then((result) => {
-            console.log(result);
             this.setState({
                 win: result.win,
                 lose: result.lose

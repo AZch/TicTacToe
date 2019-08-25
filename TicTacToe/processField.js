@@ -13,7 +13,6 @@
  . . . . . . . . . . .     соответствующем         . . . . . . . . . . .
  . . . . . . . . . . .     векторе результат       . . . . . . . . . . .
  . . . . . . . . . . .     обнуляем                . . . . . . . . . . .
- Как видно скорость вычисления в данном случае равна O(2 * n), где n то кол-во
  */
 function checkEnd(currStep, countWin, field) {
     let coordXVer = currStep.coord_x - countWin + 1, coordYVer = currStep.coord_y, countWinVer = 0;
