@@ -92,24 +92,39 @@ class InputData extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.state);
-        StandartQuestions.postData("/", this.state).then((result) => {
-            if (result.error === undefined) {
-                this.setState({
-                    status: 'success create game'
-                });
-                this.state.history.push('/game/' + result._id);
-            } else {
-                this.setState({
-                    status: result.error
-                });
-            }
-        });
+        const sizeGame = this.state.sizeGame;
+        const countWin = this.state.countWin;
+        const username = this.state.username;
+        if (sizeGame < countWin) {
+            this.setState({
+                status: 'size game cant be more then count win'
+            });
+        } else if (sizeGame === '') {
+            this.setState({
+                status: 'size game cant be empty'
+            });
+        } else if (countWin === '') {
+            this.setState({
+                status: 'count win cant be empty'
+            });
+        } else {
+            StandartQuestions.postData("/", {sizeGame: sizeGame, countWin:countWin, username: username }).then((result) => {
+                if (result.error === undefined) {
+                    this.setState({
+                        status: 'success create game'
+                    });
+                    this.state.history.push('/game/' + result._id);
+                } else {
+                    this.setState({
+                        status: result.error
+                    });
+                }
+            });
+        }
     }
 
     registerUser(event) {
         event.preventDefault();
-        console.log(this.state);
         StandartQuestions.postData('/user', this.state).then((result) => {
             if (result.error === undefined) {
                 this.setState({

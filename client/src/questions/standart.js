@@ -16,15 +16,11 @@ async function postData(url = '', data = {}) {
     }).then(res => res.json())
         .then(
             (success) => {
-                console.log('FETCH');
-                console.log(success);
                 result = success;
             },
             // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
             // чтобы не перехватывать исключения из ошибок в самих компонентах.
             (error) => {
-                console.log('FETCH');
-                console.log(error);
                 result = error;
                 /*
                 this.setState({
@@ -52,15 +48,11 @@ async function getData(url = '', data = {}) {
     }).then(res => res.json())
         .then(
             (success) => {
-                console.log('FETCH');
-                console.log(success);
                 result = success;
             },
             // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
             // чтобы не перехватывать исключения из ошибок в самих компонентах.
             (error) => {
-                console.log('FETCH');
-                console.log(error);
                 result = error;
                 /*
                 this.setState({

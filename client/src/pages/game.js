@@ -8,8 +8,6 @@ function generateField(size, steps, val = null) {
         field[i] = new Array(size).fill(val);
     }
     let isX = true;
-    console.log('steps:');
-    console.log(steps);
     for (let step of steps) {
         field[step.coord_x][step.coord_y] = isX ? 'X' : 'O';
         isX = !isX;
@@ -140,7 +138,6 @@ class Game extends React.Component {
 
     componentDidMount() {
         StandartQuestions.getData(this.state.gameURL).then((game) => {
-            console.log(game);
             if (game.error === undefined) {
                 this.setState({
                     isLoaded: true,
