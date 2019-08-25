@@ -14,6 +14,30 @@ async function getUserById(id) {
     return await User.findOne({ _id: id }).populate('games');
 }
 
+async function findAllWinGame() {
+    return Game.aggregate([
+        { $match: { isUserWin: true } },
+        { $group: {
+                _id: "$isUserWin",
+                count: { $sum: 1 }
+            }
+        }
+    ])
+}
+
+async function findAllLoseGame() {
+    return Game.aggregate([
+        { $match: { isUserWin: false } },
+        { $group: {
+                _id: "$isUserWin",
+                count: { $sum: 1 }
+            }
+        }
+    ])
+}
+
 module.exports.getUserByName = getUserByName;
 module.exports.findGameById = findGameById;
 module.exports.getUserById = getUserById;
+module.exports.findAllWinGame = findAllWinGame;
+module.exports.findAllLoseGame = findAllLoseGame;

@@ -50,15 +50,8 @@ async function getData(url = '', data = {}) {
             (success) => {
                 result = success;
             },
-            // Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-            // чтобы не перехватывать исключения из ошибок в самих компонентах.
             (error) => {
                 result = error;
-                /*
-                this.setState({
-                    isLoaded: true,
-                    error
-                });*/
             }
         );
     return result;

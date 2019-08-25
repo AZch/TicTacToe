@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
+
+const StandartQuestions = require("./questions/standart");
 const Router = require('react-router-dom').BrowserRouter;
 const Link = require('react-router-dom').Link;
 const Route = require('react-router-dom').Route;
@@ -12,13 +14,10 @@ const Game = require('./pages/game').default;
 
 
 class AppRouter extends React.Component {
-    constructor(props) {
-        super(props);
-
-    }
 
 
     render() {
+
         return (
             <Router>
                 <div>

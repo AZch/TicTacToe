@@ -20,6 +20,7 @@ class Board extends React.Component {
         this.state = {
             squares: this.generateField(props.value, props.steps),
             isX: (props.steps % 2) === 0,
+            isUserWin: props.isUserWin,
             gameURL: props.gameURL,
             statusGame: '',
             isEnd: props.isEnd,
@@ -28,8 +29,6 @@ class Board extends React.Component {
 
     }
     generateField(size, steps, val = null) {
-        console.log(size);
-        console.log(steps);
         let field = new Array(size);
         for (let i = 0; i < field.length; i++) {
             field[i] = new Array(size).fill(val);
@@ -93,13 +92,13 @@ class Board extends React.Component {
 
     render() {
         let status = "";
-        const { isUserWin, isError, statusGame, squares } = this.state;
+        const { isUserWin, isError, squares, statusGame } = this.state;
         if (isUserWin !== undefined) {
             status = 'Результат: ';
             status += isUserWin ? 'победа пользователя' : 'поражение или ничья';
         } else if (isError) {
             status = 'Ошибка: ';
-            status += this.state.statusGame;
+            status += statusGame;
         }
         return (
             <div>

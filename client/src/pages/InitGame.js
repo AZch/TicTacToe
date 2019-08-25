@@ -67,7 +67,9 @@ class InputData extends React.Component {
             sizeGame: 3,
             countWin: 3,
             history: props.history,
-            status: ''
+            status: '',
+            win: 0,
+            lose: 0
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -95,9 +97,7 @@ class InputData extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         const { sizeGame, countWin, username, isX } = this.state;
-        console.log(sizeGame - countWin);
-        console.log(countWin);
-        if (sizeGame - countWin < 0) {
+        if (sizeGame < countWin) {
             this.setState({
                 status: 'size game cant be more then count win'
             });
@@ -151,11 +151,23 @@ class InputData extends React.Component {
         event.preventDefault();
     }
 
+    componentDidMount() {
+        StandartQuestions.getData("/stat/").then((result) => {
+            console.log(result);
+            this.setState({
+                win: result.win,
+                lose: result.lose
+            });
+        });
+    }
+
     render() {
-        const status = this.state.status;
+        const {status, win, lose} = this.state;
 
         return (
             <form onSubmit={this.handleSubmit}>
+                <div className="board-row"> Wins: {win} </div>
+                <div className="board-row"> Lose: {lose} </div>
                 <div className="board-row">
                     Username:
                     <TextForm updateData={this.updateUsername} />

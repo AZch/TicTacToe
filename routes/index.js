@@ -5,16 +5,18 @@ const ProcessGame = require('../TicTacToe/processGame');
 const express = require('express');
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-  User.aggregate([
-    { $match: {} }
-  ], function (err, users) {
-    if(err) res.send({error: 'cant find users'});
-    res.send(users);
+router.get('/stat/', function(req, res, next) {
+  FindQuestion.findAllWinGame().then((resultWins) => {
+    FindQuestion.findAllLoseGame().then((resultLose) => {
+      const data = {win: resultWins[0].count, lose: resultLose[0].count};
+      res.send(data);
+    });
   });
 });
 
 router.post('/', function (req, res, next) {
+
+
   const { username, sizeGame, countWin, isX } = req.body;
   if (sizeGame < countWin || sizeGame === '' || countWin === '' ||
       sizeGame === undefined || countWin === undefined ||
