@@ -21,7 +21,7 @@ class Board extends React.Component {
         this.generateField = this.generateField.bind(this);
         this.state = {
             squares: this.generateField(props.value, props.steps),
-            isX: props.steps.length === 0 ? true : (props.steps % 2) !== 0,
+            isX: this.getIsXFromStep(props.steps),
             isUserWin: props.isUserWin,
             gameURL: props.gameURL,
             gameId: props.gameId,
@@ -32,6 +32,15 @@ class Board extends React.Component {
         this.handleClick = this.handleClick.bind(this);
 
     }
+
+    getIsXFromStep(steps) {
+        if (steps.length === 0) {
+            return true;
+        } else {
+            return (steps.length % 2 === 0);
+        }
+    }
+
     generateField(size, steps, val = null) {
         let field = new Array(size);
         for (let i = 0; i < field.length; i++) {
