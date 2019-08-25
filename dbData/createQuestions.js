@@ -1,5 +1,6 @@
 var Game = require('../shemas/game');
 var Step = require('../shemas/step');
+const User = require('../shemas/user');
 
 async function addNewGame(user, dataGame) {
     const game = await Game.create(dataGame);
@@ -17,5 +18,10 @@ async function insertStepToGame(game, dataStep) {
     return step;
 }
 
+async function addNewUser(userData) {
+    return User.create(userData);
+}
+
 module.exports.addNewGame = addNewGame;
 module.exports.insertStepToGame = insertStepToGame;
+module.exports.addNewUser = addNewUser;

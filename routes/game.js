@@ -1,5 +1,6 @@
 var CreateQuestions = require('../dbData/createQuestions');
 var FindQuestions = require('../dbData/findQuestions');
+const UpdateQuestion = require('../dbData/updateQuestions');
 var ProcessGame = require('../TicTacToe/processGame');
 var express = require('express');
 var router = express.Router();
@@ -29,15 +30,18 @@ router.post('/:id', function (req, res, next) {
                     const dataStep = { coord_x: processStep.x, coord_y: processStep.y, isUser: false };
                     CreateQuestions.insertStepToGame(game, dataStep).then((step) => { // insert step computer to DB
                         if (isEnd !== undefined && isEnd) { // check if result (computer win)
-
-                            res.send({'data': 'end', step: step});
+                            game.isUserWin = false;
+                            UpdateQuestion.updateGame(game);
+                            res.send({'data': false, step: step});
                         } else {
                             res.send(step);
                         }
                     });
 
                 } else {
-                    res.send({'data': processStep}); // user win
+                    game.isUserWin = true;
+                    UpdateQuestion.updateGame(game);
+                    res.send({'data': true}); // user win
                 }
             });
         } else {

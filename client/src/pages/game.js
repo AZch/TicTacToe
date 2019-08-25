@@ -31,22 +31,20 @@ function Square(props) {
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        console.log('steps2:');
-        console.log(props.steps);
         this.state = {
             squares: generateField(props.value, props.steps),
             xIsNext: true,
             gameURL: props.gameURL,
             statusGame: 'game...',
-            isEnd: false
+            isUserWin: props.isUserWin
         };
     }
 
     handleClick(i, j) {
         const squares = this.state.squares.slice();
         const gameURL = this.state.gameURL;
-        const isEnd = this.state.isEnd;
-        if (squares[i][j] || isEnd) {
+        const isUserWin = this.state.isUserWin;
+        if (squares[i][j] || isUserWin !== undefined) {
             return;
         }
         squares[i][j] = 'X';
@@ -63,13 +61,13 @@ class Board extends React.Component {
                     this.setState({
                         statusGame: coord.data,
                         squares: squares,
-                        isEnd: true,
+                        isUserWin: false,
                     });
                 } else {
                     console.log('dont make step');
                     this.setState({
                         statusGame: coord.data,
-                        isEnd: true,
+                        isUserWin: true,
                     });
                 }
             }
@@ -87,7 +85,11 @@ class Board extends React.Component {
     }
 
     render() {
-        const status = this.state.statusGame;
+        let status = this.state.statusGame;
+        const isUserWin = this.state.isUserWin;
+        if (isUserWin !== undefined) {
+            status = isUserWin ? 'Пользователь выиграл' : 'Компьютер выиграл';
+        }
         return (
             <div>
                 <div className="status">{status}</div>
@@ -121,6 +123,7 @@ class Game extends React.Component {
             items: [],
             steps: [],
             size: 1,
+            isUserWin: undefined
         };
 
 
@@ -132,7 +135,8 @@ class Game extends React.Component {
             this.setState({
                 isLoaded: true,
                 size: game.size,
-                steps: game.steps
+                steps: game.steps,
+                isUserWin: game.isUserWin
             })
         });
     }
@@ -142,6 +146,7 @@ class Game extends React.Component {
         const size = this.state.size;
         const gameURL = this.state.gameURL;
         const steps = this.state.steps;
+        const isUserWin = this.state.isUserWin;
         /*if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else */
@@ -149,7 +154,12 @@ class Game extends React.Component {
             return <div>Загрузка...</div>;
         } else {
             return (
-                <Board value={size} steps={steps} gmaeURL={gameURL}/>
+                <Board
+                    value={size}
+                    steps={steps}
+                    isUserWin={isUserWin}
+                    gmaeURL={gameURL}/>
+
             );
         }
     }

@@ -5,14 +5,17 @@ const StandartQuestions = require('../questions/standart');
 class TextForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {value: ''};
+        this.state = {
+            value: '',
+            updateData: props.updateData
+        };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
         this.setState({value: event.target.value});
-        this.props.updateData(event.target.value);
+        this.state.updateData(event.target.value);
     }
 
     render() {
@@ -28,7 +31,10 @@ class TextForm extends React.Component {
 class PositiveNumForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { value: 3 };
+        this.state = {
+            value: 3,
+            updateData: props.updateData
+        };
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -38,7 +44,7 @@ class PositiveNumForm extends React.Component {
             this.setState({
                 value: event.target.value,
             });
-            this.props.updateData(event.target.value)
+            this.state.updateData(event.target.value)
         }
     }
 
@@ -52,11 +58,9 @@ class PositiveNumForm extends React.Component {
     }
 }
 
-export default class InputData extends React.Component {
+class InputData extends React.Component {
     constructor(props) {
         super(props);
-        console.log('INIT');
-        console.log(props);
         this.state = {
             username: '',
             sizeGame: 3,
@@ -66,6 +70,7 @@ export default class InputData extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.registerUser = this.registerUser.bind(this);
     }
 
     updateUsername = (value) => {
@@ -85,12 +90,22 @@ export default class InputData extends React.Component {
     }
 
     handleSubmit(event) {
+        event.preventDefault();
         console.log(this.state);
         StandartQuestions.postData("/", this.state).then((result) => {
             this.state.history.push('/game/' + result._id);
         });
-        console.log();
+    }
 
+    registerUser(event) {
+        event.preventDefault();
+        console.log(this.state);
+        StandartQuestions.postData('/user', this.state).then((result) => {
+            console.log(result);
+        });
+    }
+
+    openUser(event) {
         event.preventDefault();
     }
 
@@ -100,6 +115,12 @@ export default class InputData extends React.Component {
                 <div className="board-row">
                     Username:
                     <TextForm updateData={this.updateUsername} />
+                    <button onClick={this.registerUser}>
+                        Зарегестрировать
+                    </button>
+                    <button onClick={this.openUser}>
+                        Открыть
+                    </button>
                 </div>
                 <div className="board-row">
                     Size game:
@@ -114,3 +135,5 @@ export default class InputData extends React.Component {
         );
     }
 }
+
+export default InputData;

@@ -42,7 +42,6 @@ function getFirstFindStep(mostUser, field, countWin, neight, countUser = 0) {
     if (mostUser.length > 0) {
         for (let userData of mostUser) {
             if (userData.user < countUser) break;
-            let preventCoord;
             for (let i = 0; i < userData.coord.length; i++) {
                 const currentCoord = userData.coord[i];
                 const preventCoord = userData.coord[i - 1];
@@ -73,14 +72,14 @@ function getFirstFindStep(mostUser, field, countWin, neight, countUser = 0) {
  */
 function getCoordStep(analyseFieldData, field, countWin) {
     let mostComp = analyseFieldData.sort((first, second) => {
-        return ((second.user !== first.user) ? second.user - first.user : Math.random() >= 0.5);
+        return second.comp - first.comp;
     });
 
     let step = getMostStep(mostComp, field, countWin, countWin - 1);
     if (step !== undefined) return step;
 
     let mostUser = analyseFieldData.sort((first, second) => {
-        return ((second.user !== first.user) ? second.user - first.user : Math.random() >= 0.5);
+        return second.user - first.user;
     });
 
     step = getFirstFindStep(mostUser, field, countWin, 1, countWin - 2);
