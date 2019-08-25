@@ -21,5 +21,14 @@ function processStep(game, step) {
     }
 }
 
+function makeFirstRandomStep(game) {
+    return {
+        x: Math.floor(Math.random() * game.size),
+        y: Math.floor(Math.random() * game.size),
+        end: false
+    }
+}
+
 module.exports.isValidStep = isValidStep;
 module.exports.processStep = processStep;
+module.exports.makeFirstRandomStep = makeFirstRandomStep;

@@ -71,6 +71,9 @@ function getFirstFindStep(mostUser, field, countWin, neight, countUser = 0) {
  * @returns {{x: *, y: *, end: boolean}|*} результирующий ход
  */
 function getCoordStep(analyseFieldData, field, countWin) {
+    if (analyseFieldData.length === 0) {
+        return {end: true};
+    }
     let mostComp = analyseFieldData.sort((first, second) => {
         return second.comp - first.comp;
     });

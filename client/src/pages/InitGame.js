@@ -44,7 +44,7 @@ class PositiveNumForm extends React.Component {
             this.setState({
                 value: event.target.value,
             });
-            this.state.updateData(event.target.value)
+            this.state.updateData(parseInt(event.target.value));
         }
     }
 
@@ -62,6 +62,7 @@ class InputData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isX: true,
             username: '',
             sizeGame: 3,
             countWin: 3,
@@ -72,6 +73,7 @@ class InputData extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.registerUser = this.registerUser.bind(this);
+        this.handleCheckedChange = this.handleCheckedChange.bind(this);
     }
 
     updateUsername = (value) => {
@@ -92,10 +94,10 @@ class InputData extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        const sizeGame = this.state.sizeGame;
-        const countWin = this.state.countWin;
-        const username = this.state.username;
-        if (sizeGame < countWin) {
+        const { sizeGame, countWin, username, isX } = this.state;
+        console.log(sizeGame - countWin);
+        console.log(countWin);
+        if (sizeGame - countWin < 0) {
             this.setState({
                 status: 'size game cant be more then count win'
             });
@@ -108,7 +110,8 @@ class InputData extends React.Component {
                 status: 'count win cant be empty'
             });
         } else {
-            StandartQuestions.postData("/", {sizeGame: sizeGame, countWin:countWin, username: username }).then((result) => {
+            StandartQuestions.postData("/", {sizeGame: sizeGame, countWin:countWin, username: username, isX: isX }).then((result) => {
+                console.log(result);
                 if (result.error === undefined) {
                     this.setState({
                         status: 'success create game'
@@ -121,6 +124,12 @@ class InputData extends React.Component {
                 }
             });
         }
+    }
+
+    handleCheckedChange(event) {
+        this.setState({
+            isX: !this.state.isX
+        });
     }
 
     registerUser(event) {
@@ -164,6 +173,14 @@ class InputData extends React.Component {
                 <div className="board-row">
                     Count to win:
                     <PositiveNumForm updateData={this.updateCountWin}/>
+                </div>
+                <div className="board-row">
+                    Крестики:
+                    <input
+                        name="isGoing"
+                        type="checkbox"
+                        checked={this.state.isX}
+                        onChange={this.handleCheckedChange} />
                 </div>
                 <input type="submit" value="Начать игру" />
                 <div className="board-row">

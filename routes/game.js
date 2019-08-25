@@ -2,7 +2,6 @@ const CreateQuestions = require('../dbData/createQuestions');
 const FindQuestions = require('../dbData/findQuestions');
 const UpdateQuestion = require('../dbData/updateQuestions');
 const ProcessGame = require('../TicTacToe/processGame');
-const io = require('socket.io');
 const express = require('express');
 const router = express.Router();
 
@@ -32,24 +31,30 @@ router.post('/:id', function (req, res, next) {
                 let processStep = ProcessGame.processStep(game, step);
                 if (typeof processStep !== 'string' && !(processStep instanceof String)) {
                     let isEnd = processStep.end;
+                    if (processStep.x === undefined && processStep.y === undefined && isEnd !== undefined) {
+                        game.isUserWin = false;
+                        UpdateQuestion.updateGame(game);
+                        res.send({isUserWin: false});
+                    } else {
 
-                    const dataStep = { coord_x: processStep.x, coord_y: processStep.y, isUser: false };
-                    CreateQuestions.insertStepToGame(game, dataStep).then((step) => { // insert step computer to DB
-                        if (isEnd !== undefined && isEnd) { // check if result (computer win)
-                            game.isUserWin = false;
-                            UpdateQuestion.updateGame(game);
-                            res.send({'isUserWin': false, step: step});
-                        } else {
-                            res.send(step);
-                        }
-                    }).catch((error) => {
-                        res.send({error: 'cant make computer step'});
-                    });
+                        const dataStep = {coord_x: processStep.x, coord_y: processStep.y, isUser: false};
+                        CreateQuestions.insertStepToGame(game, dataStep).then((step) => { // insert step computer to DB
+                            if (isEnd !== undefined && isEnd) { // check if result (computer win)
+                                game.isUserWin = false;
+                                UpdateQuestion.updateGame(game);
+                                res.send({isUserWin: false, step: step});
+                            } else {
+                                res.send(step);
+                            }
+                        }).catch((error) => {
+                            res.send({error: 'cant make computer step'});
+                        });
+                    }
 
                 } else {
                     game.isUserWin = true;
                     UpdateQuestion.updateGame(game);
-                    res.send({'isUserWin': true});
+                    res.send({isUserWin: true});
                 }
             }).catch((error) => {
                 res.send({error: 'cant make user step'});

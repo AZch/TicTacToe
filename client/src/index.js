@@ -8,27 +8,35 @@ const Route = require('react-router-dom').Route;
 const InputData = require('./pages/InitGame').default;
 const Game = require('./pages/game').default;
 
+//const socket = openSocket('http://localhost:8000/');
 
-function AppRouter() {
-    return (
-        <Router>
-            <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">InitGame</Link>
-                        </li>
-                    </ul>
-                </nav>
 
-                <Route path="/" exact component={InputData} />
-                <Route path="/game/:id" component={Game} />
-            </div>
-        </Router>
-    );
+class AppRouter extends React.Component {
+    constructor(props) {
+        super(props);
+
+    }
+
+
+    render() {
+        return (
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">InitGame</Link>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <Route path="/" exact component={InputData}/>
+                    <Route path="/game/:id" component={Game}/>
+                </div>
+            </Router>
+        );
+    }
 }
-
-
 
 
 ReactDOM.render(

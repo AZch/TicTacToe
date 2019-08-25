@@ -11,6 +11,9 @@ var gameSchema = new Schema({
         type: Number,
         required: [true, 'size game required']
     },
+    isX: {
+        type: Boolean
+    },
     steps: [{ type: Schema.Types.ObjectID, ref: 'step' }],
     isUserWin: Boolean
 });
