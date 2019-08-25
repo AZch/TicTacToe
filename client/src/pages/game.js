@@ -1,6 +1,8 @@
 import React from 'react';
 import '../index.css';
 const StandartQuestions = require('../questions/standart');
+const openSocket = require('socket.io-client');
+const socket = openSocket('http://localhost:8000');
 
 function Square(props) {
     return (
@@ -19,13 +21,15 @@ class Board extends React.Component {
         this.generateField = this.generateField.bind(this);
         this.state = {
             squares: this.generateField(props.value, props.steps),
-            isX: (props.steps % 2) === 0,
+            isX: props.steps.length === 0 ? true : (props.steps % 2) !== 0,
             isUserWin: props.isUserWin,
             gameURL: props.gameURL,
+            gameId: props.gameId,
             statusGame: '',
             isEnd: props.isEnd,
             isError: false
         };
+        this.handleClick = this.handleClick.bind(this);
 
     }
     generateField(size, steps, val = null) {
@@ -43,7 +47,7 @@ class Board extends React.Component {
 
 
     handleClick(i, j) {
-        const { squares, gameURL, isUserWin} = this.state;
+        const { squares, gameURL, isUserWin, gameId } = this.state;
         let isX = this.state.isX;
         if (squares[i][j] || isUserWin !== undefined) {
             return;
@@ -56,25 +60,31 @@ class Board extends React.Component {
                 this.setState({
                     squares: squares,
                     isError: false,
+                    gameURL: gameURL
                 });
             } else if (item.error === undefined) {
+                const emitSendData = {gameId: gameId, isUserWin: item.isUserWin};
+                socket.emit('resultGame', JSON.stringify(emitSendData));
                 if (item.step !== undefined) {
                     squares[item.step.coord_x][item.step.coord_y] = isX ? 'X' : 'O';
                     this.setState({
                         squares: squares,
                         isUserWin: item.isUserWin,
-                        isError: false
+                        isError: false,
+                        gameURL: gameURL
                     });
                 } else {
                     this.setState({
                         isUserWin: item.isUserWin,
-                        isError: false
+                        isError: false,
+                        gameURL: gameURL
                     });
                 }
             } else {
                 this.setState({
                     statusGame: item.error,
-                    isError: true
+                    isError: true,
+                    gameURL: gameURL
                 })
             }
         });
@@ -94,10 +104,10 @@ class Board extends React.Component {
         let status = "";
         const { isUserWin, isError, squares, statusGame } = this.state;
         if (isUserWin !== undefined) {
-            status = 'Результат: ';
-            status += isUserWin ? 'победа пользователя' : 'поражение или ничья';
+            status = 'Result: ';
+            status += isUserWin ? 'user win' : 'loss or draw';
         } else if (isError) {
-            status = 'Ошибка: ';
+            status = 'Error: ';
             status += statusGame;
         }
         return (
@@ -126,8 +136,10 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
             gameURL: props.match.url,
+            gameId: props.match.params.id,
             error: null,
             isLoaded: false,
             items: [],
@@ -135,8 +147,6 @@ class Game extends React.Component {
             size: 1,
             isUserWin: undefined,
         };
-
-
     }
 
     componentDidMount() {
@@ -158,19 +168,20 @@ class Game extends React.Component {
     }
 
     render() {
-        const {isLoaded, size, gameURL, steps, isUserWin, error} = this.state;
+        const {isLoaded, size, gameURL, steps, isUserWin, error, gameId} = this.state;
         if (error) {
-            return <div>Ошибка: {error}</div>;
+            return <div>Error: {error}</div>;
         } else
         if (!isLoaded) {
-            return <div>Загрузка...</div>;
+            return <div>Load...</div>;
         } else {
             return (
                 <Board
                     value={size}
                     steps={steps}
                     isUserWin={isUserWin}
-                    gmaeURL={gameURL}/>
+                    gameURL={gameURL}
+                    gameId={gameId}/>
 
             );
         }

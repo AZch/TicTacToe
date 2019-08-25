@@ -76,6 +76,7 @@ class InputData extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.registerUser = this.registerUser.bind(this);
         this.handleCheckedChange = this.handleCheckedChange.bind(this);
+        this.openUser = this.openUser.bind(this);
     }
 
     updateUsername = (value) => {
@@ -149,6 +150,20 @@ class InputData extends React.Component {
 
     openUser(event) {
         event.preventDefault();
+        const username = this.state.username;
+        StandartQuestions.getData("/stat/" + username).then((result) => {
+            if (result.error === undefined) {
+                this.setState({
+                    win: result.win,
+                    lose: result.lose,
+                    status: ''
+                });
+            } else {
+                this.setState({
+                    status: result.error
+                })
+            }
+        });
     }
 
     componentDidMount() {
@@ -172,10 +187,10 @@ class InputData extends React.Component {
                     Username:
                     <TextForm updateData={this.updateUsername} />
                     <button onClick={this.registerUser}>
-                        Зарегестрировать
+                        Register
                     </button>
                     <button onClick={this.openUser}>
-                        Открыть
+                        Open
                     </button>
                 </div>
                 <div className="board-row">
@@ -187,14 +202,14 @@ class InputData extends React.Component {
                     <PositiveNumForm updateData={this.updateCountWin}/>
                 </div>
                 <div className="board-row">
-                    Крестики:
+                    is X:
                     <input
-                        name="isGoing"
+                        name="isX"
                         type="checkbox"
                         checked={this.state.isX}
                         onChange={this.handleCheckedChange} />
                 </div>
-                <input type="submit" value="Начать игру" />
+                <input type="submit" value="Start game" />
                 <div className="board-row">
                     {status}
                 </div>

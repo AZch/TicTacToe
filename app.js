@@ -17,6 +17,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var gamesRouter = require('./routes/game');
 
+const io = require('socket.io')();
+const sendAll = require('./sockets/sendAll')(io);
+
+io.listen(8000);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
