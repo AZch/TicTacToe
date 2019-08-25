@@ -18,7 +18,8 @@ router.post('/', function (req, res, next) {
   const sizeGame = req.body.sizeGame;
   const countWin = req.body.countWin;
   if (sizeGame < countWin || sizeGame === '' || countWin === '' ||
-      sizeGame === undefined || countWin === undefined) {
+      sizeGame === undefined || countWin === undefined ||
+      sizeGame === 0 || countWin === 0) {
     res.send({error: 'Bad game parametrs'});
   } else {
     FindQuestion.getUserByName(username).then((user) => {
