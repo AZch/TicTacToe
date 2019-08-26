@@ -88,10 +88,8 @@ function getCoordStep(analyseFieldData, field, countWin) {
     step = getFirstFindStep(mostUser, field, countWin, 1, countWin - 2);
     if (step !== undefined) return step;
 
-    if (Math.random() >= 0.5) { // добавил немного рандома в оборону (либо только ограничивать пользователя или пытаться победить)
-        step = getFirstFindStep(mostUser, field, 1, 1);
-        if (step !== undefined) return step;
-    }
+    step = getFirstFindStep(mostUser, field, 1, 1);
+    if (step !== undefined) return step;
 
     step = getFirstFindStep(mostComp, field, 0, 0);
     if (step !== undefined) return step;
