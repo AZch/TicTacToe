@@ -1,7 +1,5 @@
 async function postData(url = '', data = {}) {
-    // Значения по умолчанию обозначены знаком *
-    let result = {};
-    await fetch(url, {
+    let result = await fetch(url, {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -12,21 +10,12 @@ async function postData(url = '', data = {}) {
         redirect: 'follow',
         referrer: 'no-referrer',
         body: JSON.stringify(data)
-    }).then(res => res.json())
-        .then(
-            (success) => {
-                result = success;
-            },
-            (error) => {
-                result = error;
-            }
-        );
-    return result;
+    });
+    return result.json();
 }
 
 async function getData(url = '') {
-    let result = {};
-    await fetch(url, {
+    let result = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache',
@@ -36,16 +25,8 @@ async function getData(url = '') {
         },
         redirect: 'follow',
         referrer: 'no-referrer',
-    }).then(res => res.json())
-        .then(
-            (success) => {
-                result = success;
-            },
-            (error) => {
-                result = error;
-            }
-        );
-    return result;
+    });
+    return result.json();
 }
 
 module.exports.postData = postData;
